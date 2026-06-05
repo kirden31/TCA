@@ -1,0 +1,6 @@
+telethon==1.38.1
+qdrant-client==1.12.1
+qdrant-server==1.12.0
+httpx==0.27.2
+python-dotenv==1.0.1
+sentence-transformers==5.1.0
