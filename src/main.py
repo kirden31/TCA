@@ -1,50 +1,46 @@
-import argparse
 import asyncio
+import logging
+import argparse
+from datetime import datetime
 
-import bot
-import config
-import utils
+logger = logging.getLogger(__name__)
+
+from services.telegram import run as telegram_run
+from services.parser import run as parser_run
+from services.qdrant import run as qdrant_run
 
 
-async def main():
-    parser = argparse.ArgumentParser(description='Telegram chat message downloader and monitor')
-    parser.add_argument(
-        '-H',
-        '--download_history',
-        action='store_true',
-        default=False,
-        help='Download chat history instead of monitoring new messages',
-    )
-    parser.add_argument(
-        '--chats',
-        nargs='+',
-        type=int,
-        default=None,
-        help='Chat IDs to process (negative for groups/channels, e.g. -100123456789). '
-        'Uses config default if not specified',
-    )
-    parser.add_argument(
-        '--limit',
-        type=int,
-        default=None,
-        help='Maximum number of messages to download per chat',
-    )
-    args = parser.parse_args()
+def run_parser(dt):
+    asyncio.run(parser_run(dt))
 
-    await config.client.start()
 
-    if args.download_history:
-        if not args.limit:
-            raise RuntimeError('You have to set LIMIT to download history.')
-        chats = args.chats if args.chats else config.CHATS
-        await bot.catch_history(chats, args.limit)
+def run_telegram_bot():
+    asyncio.run(telegram_run())
 
-    print('Мониторинг новых сообщений... (нажмите Ctrl+C для остановки)')
 
-    for _ in range(2):
-        asyncio.create_task(utils.batch_worker())
-    await config.client.run_until_disconnected()
+def main(dt):
+    try:
+        qdrant_ok = asyncio.run(qdrant_run())
+        if not qdrant_ok:
+            logger.error('Qdrant failed to start')
+            return
+
+        run_parser(dt)
+        run_telegram_bot()
+
+    except asyncio.CancelledError:
+        logger.info('Application finished')
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description='Chat Analyzer')
+    parser.add_argument(
+        '-dfdt',
+        '--download_from_datetime',
+        type=lambda s: datetime.strptime(s, '%Y-%m-%dT%H:%M:%S'),
+        help='Дата по которую скачать сообщения. ФОРМАТ: yyyy-mm-ddThh:mm:ss',
+    )
+    args = parser.parse_args()
+
+    # asyncio.run(main(args.download_from_datetime))
+    main(args.download_from_datetime)

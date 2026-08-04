@@ -1,5 +1,4 @@
 [flake8]
-application-import-names=api,herald,news,users
 exclude=
     .git,
     __pycache__,
@@ -7,7 +6,6 @@ exclude=
     */migrations/,
     env/
     __init__.py
-    manage.py
 max-line-length=120
 import-order-style=google
 max-complexity = 8
