@@ -4,9 +4,9 @@ from qdrant_client.models import PointStruct
 
 import config
 import logging
+import modules.utils
 
 logger = logging.getLogger(__name__)
-import modules.utils
 
 
 async def add_msgs(msgs):

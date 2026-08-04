@@ -16,7 +16,7 @@ async def run(dt=None):
         if not config.client.is_connected():
             await config.client.start()
 
-        logger.info('Активация пассивного парсера...')
+        logger.info('Activating passive parser...')
 
         async with asyncio.TaskGroup() as tg:
             tg.create_task(modules.workers.qdrant_workers.run())
@@ -24,12 +24,12 @@ async def run(dt=None):
 
             if dt:
                 result = await bot.download_history(dt)
-                logger.debug(f'Результат скачивания истории: {result}')
+                logger.debug(f'History download result: {result}')
 
             await config.client.run_until_disconnected()
 
     except asyncio.CancelledError:
-        logger.info('Завершение работы парсера')
+        logger.info('Parser work finished')
         await config.client.disconnect()
         raise
 

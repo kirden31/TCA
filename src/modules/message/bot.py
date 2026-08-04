@@ -22,7 +22,7 @@ async def catch_message(event):
                 if (msg.chat_id, topic) not in config.CHATS:
                     return
 
-        logger.debug(f'{msg.date}: added {msg.text[:50]} ..')
+        logger.debug(f'{msg.date}: added {msg.text[:50]} ...')
 
         await modules.utils.put([msg], config.message_queue_raw)
 

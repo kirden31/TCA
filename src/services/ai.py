@@ -9,12 +9,12 @@ logger = logging.getLogger(__name__)
 
 async def run():
     try:
-        print('Модуль с ИИ запущен (для вопросов по БД)')
-        print('Введите ваш вопрос:')
+        logger.info('AI module started (for DB questions)')
+        logger.info('Enter your question:')
 
         while True:
             try:
-                question = await aioconsole.ainput('\nВопрос ("CLOSE AI APP" для выхода): ')
+                question = await aioconsole.ainput('\nQuestion ("CLOSE AI APP" to exit): ')
                 question = question.strip()
 
                 if not question:
@@ -23,17 +23,17 @@ async def run():
                 if question == 'CLOSE AI APP':
                     return
 
-                print('[ai] Поиск по базе...')
+                logger.info('Searching database...')
                 answer = await search.search(question)
 
                 if answer:
-                    print(f'[ai] Ответ: {answer}')
+                    logger.info(f'Answer: {answer}')
                 else:
-                    print('[ai] Не удалось найти ответ.')
+                    logger.warning('No answer found.')
             except Exception as e:
-                print(f'[ai] Ошибка при обработке вопроса: {e}')
+                logger.error(f'Error processing question: {e}')
     except asyncio.CancelledError:
-        logging.info('Закрытие модуля ИИ')
+        logging.info('Closing AI module')
         raise
 
 

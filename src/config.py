@@ -5,6 +5,13 @@ from pathlib import Path
 
 import aiogram
 
+from dotenv import load_dotenv
+from qdrant_client import AsyncQdrantClient
+from sentence_transformers import SentenceTransformer
+from telethon import TelegramClient, functions
+
+load_dotenv()
+
 file_handler = logging.FileHandler('app.log')
 file_handler.setLevel(logging.DEBUG)
 
@@ -17,13 +24,6 @@ logging.basicConfig(
     handlers=[file_handler, stream_handler],
 )
 logger = logging.getLogger(__name__)
-
-from dotenv import load_dotenv
-from qdrant_client import AsyncQdrantClient
-from sentence_transformers import SentenceTransformer
-from telethon import TelegramClient, functions
-
-load_dotenv()
 
 
 def parse_chats(chats_env):

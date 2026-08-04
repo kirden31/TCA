@@ -20,10 +20,12 @@ async def run():
     try:
         await config.qdrant_client.get_collection(collection_name=config.COLLECTION)
     except Exception:
+        logger.info(f'Creating collection {config.COLLECTION}...')
         await config.qdrant_client.create_collection(
             collection_name=config.COLLECTION,
             vectors_config=models.VectorParams(size=384, distance=models.Distance.COSINE),
         )
+        logger.info(f'Creating index for field "date" in collection {config.COLLECTION}...')
         await config.qdrant_client.create_payload_index(
             collection_name=config.COLLECTION, field_name='date', field_schema='datetime'
         )

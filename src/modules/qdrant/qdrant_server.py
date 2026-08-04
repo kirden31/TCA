@@ -43,7 +43,7 @@ class QdrantServer:
             return False
 
     def _remove_container_if_exists(self):
-        logger.info(f'Проверка контейнера {self.CONTAINER_NAME}...')
+        logger.info(f'Checking container {self.CONTAINER_NAME}...')
         result = subprocess.run(
             ['sudo', 'docker', 'ps', '-a', '-q', '--filter', f'name={self.CONTAINER_NAME}'],
             capture_output=True,
@@ -53,7 +53,7 @@ class QdrantServer:
 
         container_ids = result.stdout.strip()
         if container_ids:
-            logger.debug('Найден существующий контейнер, удаляю...')
+            logger.debug('Existing container found, removing...')
             rm_result = subprocess.run(
                 ['sudo', 'docker', 'rm', '-f', self.CONTAINER_NAME],
                 capture_output=True,
@@ -61,20 +61,20 @@ class QdrantServer:
                 check=False,
             )
             if rm_result.returncode == 0:
-                logger.info(f'Контейнер "{self.CONTAINER_NAME}" удалён.')
+                logger.info(f'Container "{self.CONTAINER_NAME}" removed.')
             else:
-                logger.warning(f'Не удалось удалить контейнер: {rm_result.stderr.strip()}')
+                logger.warning(f'Failed to remove container: {rm_result.stderr.strip()}')
         return container_ids
 
     def start(self, timeout: int = 30) -> bool:
-        logger.info('Запуск Qdrant сервера (Docker)...')
+        logger.info('Starting Qdrant server (Docker)...')
 
         self._remove_container_if_exists()
 
         time.sleep(1)
 
         if self.is_running():
-            logger.debug('Контейнер уже запущен.')
+            logger.debug('Container already running.')
             self._is_running = True
             return True
 
@@ -90,21 +90,21 @@ class QdrantServer:
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
         if result.returncode != 0:
-            logger.error(f'Ошибка запуска Docker:\n{result.stderr.strip()}')
+            logger.error(f'Docker start error:\n{result.stderr.strip()}')
             return False
 
         for _ in range(timeout):
             time.sleep(1)
             if self.is_running():
-                logger.info('Qdrant сервер успешно запущен!')
+                logger.info('Qdrant server started successfully!')
                 self._is_running = True
                 return True
 
-        logger.error(f'Qdrant не запустился в течение {timeout} сек.')
+        logger.error(f'Qdrant failed to start within {timeout} sec.')
         return False
 
     def stop(self, force: bool = True) -> bool:
-        logger.info('Остановка Qdrant сервера...')
+        logger.info('Stopping Qdrant server...')
 
         timeout = '2' if force else '30'
         cmd = ['sudo', 'docker', 'stop', '-t', timeout, self.CONTAINER_NAME]
@@ -113,10 +113,10 @@ class QdrantServer:
 
         if result.returncode == 0:
             self._is_running = False
-            logger.debug('Контейнер остановлен.')
+            logger.debug('Container stopped.')
             return True
 
-        logger.error(f'Ошибка остановки:\n{result.stderr.strip()}')
+        logger.error(f'Stop error:\n{result.stderr.strip()}')
         return False
 
     def restart(self, timeout: int = 30) -> bool:
@@ -140,4 +140,4 @@ def get_qdrant_server(url: str = config.qdrant_url, volume_path: Path = config.q
 
 if __name__ == '__main__':
     server = QdrantServer()
-    logger.info(f'Текущий статус: {'Запущен' if server.is_running() else 'Остановлен'}')
+    logger.info(f'Current status: {"Running" if server.is_running() else "Stopped"}')

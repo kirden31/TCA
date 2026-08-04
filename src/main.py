@@ -3,11 +3,11 @@ import logging
 import argparse
 from datetime import datetime
 
-logger = logging.getLogger(__name__)
-
 from services.telegram import run as telegram_run
 from services.parser import run as parser_run
 from services.qdrant import run as qdrant_run
+
+logger = logging.getLogger(__name__)
 
 
 def run_parser(dt):
@@ -42,5 +42,4 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    # asyncio.run(main(args.download_from_datetime))
     main(args.download_from_datetime)
