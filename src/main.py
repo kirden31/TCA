@@ -1,11 +1,13 @@
-import asyncio
-import logging
-import argparse
-from datetime import datetime
+__all__ = ['main']
 
-from services.telegram import run as telegram_run
+import argparse
+import asyncio
+from datetime import datetime
+import logging
+
 from services.parser import run as parser_run
 from services.qdrant import run as qdrant_run
+from services.telegram import run as telegram_run
 
 logger = logging.getLogger(__name__)
 

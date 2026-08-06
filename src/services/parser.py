@@ -1,14 +1,16 @@
+__all__ = ['run']
+
 import argparse
 import asyncio
-import logging
 from datetime import datetime
+import logging
 
 import config
+from modules.message import bot
+import modules.workers.messages_worker
+import modules.workers.qdrant_workers
 
 logger = logging.getLogger(__name__)
-from modules.message import bot
-import modules.workers.qdrant_workers
-import modules.workers.messages_worker
 
 
 async def run(dt=None):

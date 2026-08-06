@@ -1,7 +1,10 @@
-import logging
-import asyncio
-from aiogram import Dispatcher
+__all__ = ['run']
 
+
+import asyncio
+import logging
+
+from aiogram import Dispatcher
 import config
 from modules.telegram.handlers import router
 

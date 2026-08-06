@@ -1,14 +1,16 @@
+__all__ = []
+
+
 import asyncio
-import os
 import logging
+import os
 from pathlib import Path
 
 import aiogram
-
 from dotenv import load_dotenv
 from qdrant_client import AsyncQdrantClient
 from sentence_transformers import SentenceTransformer
-from telethon import TelegramClient, functions
+from telethon import TelegramClient
 
 load_dotenv()
 

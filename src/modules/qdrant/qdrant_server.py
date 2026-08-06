@@ -1,11 +1,17 @@
+__all__ = ['QdrantServer', 'get_qdrant_server']
+
+import logging
 from pathlib import Path
 import subprocess
 import time
-import logging
+
+import config
+
 
 logger = logging.getLogger(__name__)
 
-import config
+
+DEFAULT_VOLUME_PATH = Path.cwd() / 'qdrant_storage'
 
 
 class QdrantServer:
@@ -16,7 +22,7 @@ class QdrantServer:
         self,
         url: str = DEFAULT_URL,
         docker_image: str = 'qdrant/qdrant',
-        volume_path: Path = Path.cwd() / 'qdrant_storage',
+        volume_path: Path = DEFAULT_VOLUME_PATH,
     ):
         self.url = url
         self.docker_image = docker_image
@@ -64,6 +70,7 @@ class QdrantServer:
                 logger.info(f'Container "{self.CONTAINER_NAME}" removed.')
             else:
                 logger.warning(f'Failed to remove container: {rm_result.stderr.strip()}')
+
         return container_ids
 
     def start(self, timeout: int = 30) -> bool:

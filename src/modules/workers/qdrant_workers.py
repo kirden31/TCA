@@ -1,3 +1,6 @@
+__all__ = ['run']
+
+
 import asyncio
 import logging
 
@@ -6,7 +9,7 @@ import config
 logger = logging.getLogger(__name__)
 
 
-async def flush(batch, retries=3):
+async def _flush_batch(batch, retries=3):
     for attempt in range(retries):
         try:
             await config.qdrant_client.upsert(
@@ -37,7 +40,7 @@ async def run():
             batch.append(point)
 
             if len(batch) >= config.BATCH_SIZE:
-                await flush(batch)
+                await _flush_batch(batch)
 
                 for _ in batch:
                     config.message_queue.task_done()
@@ -46,7 +49,7 @@ async def run():
 
         except asyncio.TimeoutError:
             if batch:
-                await flush(batch)
+                await _flush_batch(batch)
 
                 for _ in batch:
                     config.message_queue.task_done()

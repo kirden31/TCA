@@ -1,13 +1,14 @@
+__all__ = ['catch_message', 'download_history']
+
 import asyncio
 import logging
 
-from telethon import events
-
 import config
-
-logger = logging.getLogger(__name__)
 from modules.message import history
 import modules.utils
+from telethon import events
+
+logger = logging.getLogger(__name__)
 
 
 @config.client.on(events.NewMessage(chats=[x[0] for x in config.CHATS]))
@@ -31,5 +32,5 @@ async def catch_message(event):
 
 
 async def download_history(dt, chats=config.CHATS):
-    unique_chats = set(chat_id for chat_id, _ in chats)
-    return await asyncio.gather(*(history.save_history(chat_id, dt) for chat_id in unique_chats))
+    unique_chats = {chat_id for chat_id, _ in chats}
+    return await asyncio.gather(*[history.save_history(chat_id, dt) for chat_id in unique_chats])

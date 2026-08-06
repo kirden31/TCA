@@ -1,7 +1,8 @@
+__all__ = ['cmd_start', 'handle_ai_query']
+
 from aiogram import Router, types
 from aiogram.filters import CommandStart
 from aiogram.utils.chat_action import ChatActionSender
-
 import config
 from modules.ai import search
 

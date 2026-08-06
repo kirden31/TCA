@@ -1,8 +1,11 @@
-import config
+__all__ = ['run']
+
+import asyncio
 import logging
+
+import config
 from modules.qdrant.qdrant_server import get_qdrant_server
 from qdrant_client import AsyncQdrantClient, models
-import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +30,9 @@ async def run():
         )
         logger.info(f'Creating index for field "date" in collection {config.COLLECTION}...')
         await config.qdrant_client.create_payload_index(
-            collection_name=config.COLLECTION, field_name='date', field_schema='datetime'
+            collection_name=config.COLLECTION,
+            field_name='date',
+            field_schema='datetime',
         )
 
     return True

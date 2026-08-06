@@ -1,10 +1,12 @@
-from openai import AsyncOpenAI
-from openai.types.chat import ChatCompletionSystemMessageParam, ChatCompletionUserMessageParam
+__all__ = ['embed_text', 'format_context', 'llm_answer', 'llm_question', 'llm_request', 'search']
+
+import logging
 
 import config
 from modules import utils
 from modules.ai import prompts
-import logging
+from openai import AsyncOpenAI
+from openai.types.chat import ChatCompletionSystemMessageParam, ChatCompletionUserMessageParam
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +19,8 @@ def embed_text(text: str):
 
 def format_context(results) -> str:
     chunks = []
-    for p in results:
-        payload = p.payload or {}
+    for result in results:
+        payload = result.payload or {}
         text = payload.get('text', '')
         chat_id = payload.get('chat_id', '')
         date = payload.get('date', '')
@@ -26,6 +28,7 @@ def format_context(results) -> str:
         if text:
             meta = f'[chat={chat_id} date={date} user={username}]'
             chunks.append(f'{meta}\n{text}')
+
     return '\n\n---\n\n'.join(chunks)
 
 
@@ -36,9 +39,9 @@ async def llm_answer(question: str, context: str) -> str:
 
 async def llm_question(question: str) -> str:
     logger.info('Генерирую запрос...')
-    q = await llm_request(prompts.LLM_QUESTION_PROMPT, question)
-    logger.debug(f'Запрос: {q}')
-    return q
+    query = await llm_request(prompts.LLM_QUESTION_PROMPT, question)
+    logger.debug(f'Запрос: {query}')
+    return query
 
 
 async def llm_request(system_content: str, content: str) -> str:
