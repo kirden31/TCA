@@ -226,4 +226,6 @@ send_mail/
 
 # Additional
 tg-parser.session
-qdrant_storage/
+src/tg-parser.session
+src/qdrant_storage/
+src/app.log
