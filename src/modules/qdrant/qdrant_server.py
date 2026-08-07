@@ -7,9 +7,7 @@ import time
 
 import config
 
-
 logger = logging.getLogger(__name__)
-
 
 DEFAULT_VOLUME_PATH = Path.cwd() / 'qdrant_storage'
 

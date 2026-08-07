@@ -33,4 +33,10 @@ async def catch_message(event):
 
 async def download_history(dt, chats=config.CHATS):
     unique_chats = {chat_id for chat_id, _ in chats}
-    return await asyncio.gather(*[history.save_history(chat_id, dt) for chat_id in unique_chats])
+    try:
+        logger.info('Start downloading history')
+        return await asyncio.gather(
+            *[history.save_history(chat_id, dt) for chat_id in unique_chats],
+        )
+    except Exception as e:
+        logger.error(f'Error downloading history: {e}')

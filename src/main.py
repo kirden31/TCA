@@ -12,23 +12,17 @@ from services.telegram import run as telegram_run
 logger = logging.getLogger(__name__)
 
 
-def run_parser(dt):
-    asyncio.run(parser_run(dt))
-
-
-def run_telegram_bot():
-    asyncio.run(telegram_run())
-
-
-def main(dt):
+async def main(dt):
     try:
-        qdrant_ok = asyncio.run(qdrant_run())
+        qdrant_ok = await qdrant_run()
         if not qdrant_ok:
             logger.error('Qdrant failed to start')
             return
 
-        run_parser(dt)
-        run_telegram_bot()
+        await asyncio.gather(
+            parser_run(dt),
+            telegram_run(),
+        )
 
     except asyncio.CancelledError:
         logger.info('Application finished')
@@ -44,4 +38,4 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    main(args.download_from_datetime)
+    asyncio.run(main(args.download_from_datetime))

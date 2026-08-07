@@ -1,6 +1,5 @@
 __all__ = ['embed_texts', 'embed_text', 'put']
 
-
 import asyncio
 
 import config

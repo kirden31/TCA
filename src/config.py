@@ -1,6 +1,5 @@
 __all__ = []
 
-
 import asyncio
 import logging
 import os
@@ -14,8 +13,15 @@ from telethon import TelegramClient
 
 load_dotenv()
 
+log_levels = {
+    'BEBUG': logging.DEBUG,
+    'INFO': logging.INFO,
+    'WARNING': logging.WARNING,
+    'ERROR': logging.ERROR,
+}
+
 file_handler = logging.FileHandler('app.log')
-file_handler.setLevel(logging.DEBUG)
+file_handler.setLevel(log_levels[os.getenv('LOG_LEVEL', 'INFO').upper()])
 
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.WARNING)
@@ -76,4 +82,4 @@ TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 bot = aiogram.Bot(token=TELEGRAM_TOKEN)
 
 qdrant_client = AsyncQdrantClient(url=qdrant_url)
-embedder = SentenceTransformer('intfloat/e5-small', device='cpu')
+embedder = SentenceTransformer('intfloat/multilingual-e5-base', device='cpu')

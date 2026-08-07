@@ -1,6 +1,5 @@
 __all__ = ['run']
 
-
 import asyncio
 import logging
 
@@ -14,14 +13,14 @@ logger = logging.getLogger(__name__)
 
 async def run():
     if not config.TELEGRAM_TOKEN:
-        logger.error('Ошибка: TELEGRAM_TOKEN не найден в переменных окружения!')
+        logger.error('TELEGRAM_TOKEN did not found')
         return
 
     dp = Dispatcher()
 
     dp.include_router(router)
 
-    logger.info('Запуск Telegram бота...')
+    logger.info('Starting Telegram bot...')
     await dp.start_polling(config.bot)
 
 

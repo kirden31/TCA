@@ -26,7 +26,7 @@ async def run(dt=None):
 
             if dt:
                 result = await bot.download_history(dt)
-                logger.debug(f'History download result: {result}')
+                logger.info(f'History download result: {result}')
 
             await config.client.run_until_disconnected()
 

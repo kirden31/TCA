@@ -1,4 +1,4 @@
-__all__ = ['embed_text', 'format_context', 'llm_answer', 'llm_question', 'llm_request', 'search']
+__all__ = ['format_context', 'llm_answer', 'llm_question', 'llm_request', 'search']
 
 import logging
 
@@ -11,10 +11,6 @@ from openai.types.chat import ChatCompletionSystemMessageParam, ChatCompletionUs
 logger = logging.getLogger(__name__)
 
 client = AsyncOpenAI(base_url=config.LLM_BASE_URL, api_key=config.LLM_API_KEY)
-
-
-def embed_text(text: str):
-    return config.embedder.encode([text], normalize_embeddings=True).tolist()[0]
 
 
 def format_context(results) -> str:

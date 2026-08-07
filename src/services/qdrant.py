@@ -10,6 +10,15 @@ from qdrant_client import AsyncQdrantClient, models
 logger = logging.getLogger(__name__)
 
 
+async def create_payload(field_name, field_schema):
+    logger.info(f'Creating index for field "{field_name}" in collection {config.COLLECTION}...')
+    await config.qdrant_client.create_payload_index(
+        collection_name=config.COLLECTION,
+        field_name=field_name,
+        field_schema=field_schema,
+    )
+
+
 async def run():
     logger.info('Starting Qdrant server...')
     server = get_qdrant_server()
@@ -26,14 +35,11 @@ async def run():
         logger.info(f'Creating collection {config.COLLECTION}...')
         await config.qdrant_client.create_collection(
             collection_name=config.COLLECTION,
-            vectors_config=models.VectorParams(size=384, distance=models.Distance.COSINE),
+            vectors_config=models.VectorParams(size=768, distance=models.Distance.COSINE),
         )
-        logger.info(f'Creating index for field "date" in collection {config.COLLECTION}...')
-        await config.qdrant_client.create_payload_index(
-            collection_name=config.COLLECTION,
-            field_name='date',
-            field_schema='datetime',
-        )
+
+        await create_payload('date', 'datetime')
+        await create_payload('chat_id', 'text')
 
     return True
 

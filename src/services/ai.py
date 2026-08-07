@@ -1,6 +1,5 @@
 __all__ = ['process_question', 'get_next_question', 'run']
 
-
 import asyncio
 import logging
 
