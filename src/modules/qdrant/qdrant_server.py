@@ -103,6 +103,7 @@ class QdrantServer:
             if self.is_running():
                 logger.info('Qdrant server started successfully!')
                 self._is_running = True
+                time.sleep(5)
                 return True
 
         logger.error(f'Qdrant failed to start within {timeout} sec.')

@@ -3,9 +3,9 @@ __all__ = ['run']
 import asyncio
 import logging
 
-from aiogram import Dispatcher
+import aiogram
 import config
-from modules.telegram.handlers import router
+import modules.telegram.handlers
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,9 +16,9 @@ async def run():
         logger.error('TELEGRAM_TOKEN did not found')
         return
 
-    dp = Dispatcher()
+    dp = aiogram.Dispatcher()
 
-    dp.include_router(router)
+    dp.include_router(modules.telegram.handlers.router)
 
     logger.info('Starting Telegram bot...')
     await dp.start_polling(config.bot)
