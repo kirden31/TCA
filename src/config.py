@@ -56,8 +56,8 @@ API_ID = int(os.getenv('API_ID', ''))
 
 API_HASH = os.getenv('API_HASH', '')
 
-qdrant_url = os.getenv('QDRANT_URL') or 'http://localhost:6333'
-qdrant_volume_path = Path.cwd() / 'qdrant_storage'
+QDRANT_URL = os.getenv('QDRANT_URL') or 'http://localhost:6333'
+QDRANT_VOLUME_PATH = Path(os.getenv('QDRANT_VOLUME_PATH', Path.cwd())) / 'qdrant_storage'
 COLLECTION = os.getenv('QDRANT_COLLECTION')
 
 BATCH_SIZE = 64
@@ -82,5 +82,5 @@ client = TelegramClient(
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 bot = aiogram.Bot(token=TELEGRAM_TOKEN)
 
-qdrant_client = AsyncQdrantClient(url=qdrant_url)
+qdrant_client = AsyncQdrantClient(url=QDRANT_URL)
 embedder = SentenceTransformer('intfloat/multilingual-e5-base', device='cpu')
