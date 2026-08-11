@@ -9,18 +9,16 @@ import config
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_VOLUME_PATH = Path.cwd() / 'qdrant_storage'
-
 
 class QdrantServer:
-    DEFAULT_URL = config.qdrant_url
+    DEFAULT_URL = config.QDRANT_URL
     CONTAINER_NAME = 'chat_analyzer_qdrant'
 
     def __init__(
         self,
         url: str = DEFAULT_URL,
         docker_image: str = 'qdrant/qdrant',
-        volume_path: Path = DEFAULT_VOLUME_PATH,
+        volume_path: Path = config.QDRANT_VOLUME_PATH,
     ):
         self.url = url
         self.docker_image = docker_image
@@ -140,7 +138,7 @@ class QdrantServer:
         return result.stdout.strip()
 
 
-def get_qdrant_server(url: str = config.qdrant_url, volume_path: Path = config.qdrant_volume_path):
+def get_qdrant_server(url: str = config.QDRANT_URL, volume_path: Path = config.QDRANT_VOLUME_PATH):
     return QdrantServer(url=url, volume_path=volume_path)
 
 

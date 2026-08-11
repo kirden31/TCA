@@ -27,7 +27,7 @@ async def run():
     if not success:
         return False
 
-    config.qdrant_client = AsyncQdrantClient(url=config.qdrant_url)
+    config.qdrant_client = AsyncQdrantClient(url=config.QDRANT_URL)
 
     try:
         await config.qdrant_client.get_collection(collection_name=config.COLLECTION)
