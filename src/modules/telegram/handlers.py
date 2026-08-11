@@ -1,28 +1,33 @@
 __all__ = ['cmd_start', 'handle_ai_query']
 
-from aiogram import Router, types
-from aiogram.filters import CommandStart
-from aiogram.utils.chat_action import ChatActionSender
+import aiogram.filters
+import aiogram.utils.chat_action
 import config
-from modules.ai import search
+import modules.ai
+import modules.telegram.decorators as dec
 
-router = Router()
+router = aiogram.Router()
 
 
-@router.message(CommandStart())
-async def cmd_start(message: types.Message):
+@router.message(aiogram.filters.CommandStart())
+@dec.check_user_id
+async def cmd_start(message: aiogram.types.Message):
     await message.answer('Привет! Я ИИ-бот, работающий на базе чатов.\nЗадай мне любой вопрос!')
 
 
 @router.message()
-async def handle_ai_query(message: types.Message):
+@dec.check_user_id
+async def handle_ai_query(message: aiogram.types.Message):
     if not message.text:
         await message.answer('Отправьте текстовое сообщение.')
         return
 
     try:
-        async with ChatActionSender.typing(bot=config.bot, chat_id=message.chat.id):
-            answer = await search.search(message.text)
+        async with aiogram.utils.chat_action.ChatActionSender.typing(
+            bot=config.bot,
+            chat_id=message.chat.id,
+        ):
+            answer = await modules.ai.search.search(message.text)
 
         await message.answer(answer)
 

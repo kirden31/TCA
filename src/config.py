@@ -68,6 +68,7 @@ LLM_API_KEY = os.getenv('LLM_API_KEY')
 LLM_MODEL = os.getenv('LLM_MODEL')
 
 CHATS = parse_chats(os.getenv('CHATS', ''))
+ALLOWED_USERS = os.getenv('ALLOWED_USERS', '')
 
 message_queue_raw = asyncio.Queue()
 message_queue = asyncio.Queue()
