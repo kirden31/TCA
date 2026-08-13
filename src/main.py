@@ -5,6 +5,7 @@ import asyncio
 from datetime import datetime
 import logging
 
+import config
 from services.parser import run as parser_run
 from services.qdrant import run as qdrant_run
 from services.telegram import run as telegram_run
@@ -18,6 +19,8 @@ async def main(dt):
         if not qdrant_ok:
             logger.error('Qdrant failed to start')
             return
+
+        config.get_embedder()
 
         await asyncio.gather(
             parser_run(dt),

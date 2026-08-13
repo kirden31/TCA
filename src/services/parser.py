@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 async def run(dt=None):
     try:
+        config.get_embedder()
+
         if not config.client.is_connected():
             await config.client.start()
 

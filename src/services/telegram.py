@@ -16,6 +16,8 @@ async def run():
         logger.error('TELEGRAM_TOKEN did not found')
         return
 
+    config.get_embedder()
+
     dp = aiogram.Dispatcher()
 
     dp.include_router(modules.telegram.handlers.router)

@@ -1,4 +1,4 @@
-__all__ = []
+__all__ = ['get_embedder']
 
 import asyncio
 import logging
@@ -8,7 +8,6 @@ from pathlib import Path
 import aiogram
 from dotenv import load_dotenv
 from qdrant_client import AsyncQdrantClient
-from sentence_transformers import SentenceTransformer
 from telethon import TelegramClient
 
 load_dotenv()
@@ -20,14 +19,17 @@ log_levels = {
     'ERROR': logging.ERROR,
 }
 
-file_handler = logging.FileHandler('app.log')
-file_handler.setLevel(log_levels[os.getenv('LOG_LEVEL', 'INFO').upper()])
+LOGS_DIR = Path(os.getenv('LOGS_DIR', '')) / 'app.log'
+LOGS_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
+
+file_handler = logging.FileHandler(LOGS_DIR)
+file_handler.setLevel(log_levels[LOGS_LEVEL])
 
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.WARNING)
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=log_levels[os.getenv('LOG_LEVEL', 'INFO').upper()],
     format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
     handlers=[file_handler, stream_handler],
 )
@@ -57,14 +59,14 @@ API_ID = int(os.getenv('API_ID', ''))
 API_HASH = os.getenv('API_HASH', '')
 
 QDRANT_URL = os.getenv('QDRANT_URL') or 'http://localhost:6333'
-QDRANT_VOLUME_PATH = Path(os.getenv('QDRANT_VOLUME_PATH', Path.cwd())) / 'qdrant_storage'
+QDRANT_VOLUME_PATH = Path(os.getenv('QDRANT_VOLUME_PATH', '')) / 'qdrant_storage'
 COLLECTION = os.getenv('QDRANT_COLLECTION')
 
 BATCH_SIZE = 64
 BATCH_TIMEOUT = 0.5
 
 LLM_BASE_URL = os.getenv('LLM_BASE_URL')
-LLM_API_KEY = os.getenv('LLM_API_KEY')
+LLM_API_KEY = os.getenv('LLM_API_KEY', '')
 LLM_MODEL = os.getenv('LLM_MODEL')
 
 CHATS = parse_chats(os.getenv('CHATS', ''))
@@ -83,4 +85,19 @@ TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 bot = aiogram.Bot(token=TELEGRAM_TOKEN)
 
 qdrant_client = AsyncQdrantClient(url=QDRANT_URL)
-embedder = SentenceTransformer('intfloat/multilingual-e5-base', device='cpu')
+
+embedder = None
+
+
+def get_embedder():
+    global embedder
+
+    if embedder is None:
+        from sentence_transformers import SentenceTransformer
+
+        embedder = SentenceTransformer(
+            'intfloat/multilingual-e5-base',
+            device='cpu',
+        )
+
+    return embedder

@@ -3,7 +3,7 @@ __all__ = ['cmd_start', 'handle_ai_query']
 import aiogram.filters
 import aiogram.utils.chat_action
 import config
-import modules.ai
+import modules.ai.search
 import modules.telegram.decorators as dec
 
 router = aiogram.Router()
@@ -31,5 +31,5 @@ async def handle_ai_query(message: aiogram.types.Message):
 
         await message.answer(answer)
 
-    except Exception:
-        await message.answer('Произошла ошибка. Попробуйте позже.')
+    except Exception as e:
+        await message.answer(f'Произошла ошибка. Попробуйте позже.\n{e}')

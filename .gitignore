@@ -229,3 +229,4 @@ tg-parser.session
 src/tg-parser.session
 src/qdrant_storage/
 src/app.log
+src/tg-parser.session-journal

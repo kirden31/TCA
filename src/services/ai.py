@@ -4,6 +4,7 @@ import asyncio
 import logging
 
 import aioconsole
+import config
 from modules.ai import search
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,8 @@ async def get_next_question():
 
 async def run():
     try:
+        config.get_embedder()
+
         logger.info('AI module started (for DB questions)')
         logger.info('Enter your question:')
 
