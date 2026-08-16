@@ -5,7 +5,7 @@ import logging
 import os
 from pathlib import Path
 
-import aiogram
+import aiogram.client.default
 from dotenv import load_dotenv
 from qdrant_client import AsyncQdrantClient
 from telethon import TelegramClient
@@ -81,7 +81,12 @@ client = TelegramClient(
 )
 
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
-bot = aiogram.Bot(token=TELEGRAM_TOKEN, parse_mode='HTML')
+bot = aiogram.Bot(
+    token=TELEGRAM_TOKEN,
+    default=aiogram.client.default.DefaultBotProperties(
+        parse_mode='HTML',
+    ),
+)
 
 qdrant_client = AsyncQdrantClient(url=QDRANT_URL)
 
