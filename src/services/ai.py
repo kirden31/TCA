@@ -46,7 +46,6 @@ async def run():
         config.get_embedder()
 
         logger.info('AI module started (for DB questions)')
-        logger.info('Enter your question:')
 
         while True:
             question = await get_next_question()

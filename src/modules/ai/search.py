@@ -29,14 +29,14 @@ def format_context(results) -> str:
 
 
 async def llm_answer(question: str, context: str) -> str:
-    content = f'Вопрос: {question}\n\nКонтекст:\n{context}'
+    content = f'Question: {question}\n\nContext:\n{context}'
     return await llm_request(prompts.LLM_ANSWER_PROMPT, content)
 
 
 async def llm_question(question: str) -> str:
-    logger.info('Генерирую запрос...')
+    logger.info('Generating request...')
     query = await llm_request(prompts.LLM_QUESTION_PROMPT, question)
-    logger.debug(f'Запрос: {query}')
+    logger.debug(f'Request: {query}')
     return query
 
 
@@ -75,5 +75,5 @@ async def search(question: str, limit: int = 50):
 
         return answer
     except Exception as e:
-        logger.error(f'Ошибка при поиске: {e}')
+        logger.error(f'Error during search: {e}')
         return None

@@ -16,7 +16,7 @@ async def run():
     while True:
         try:
             point = await asyncio.wait_for(
-                config.message_queue.get(),
+                config.message_queue_raw.get(),
                 timeout=config.BATCH_TIMEOUT,
             )
 
@@ -26,7 +26,7 @@ async def run():
                 await add_msgs(batch)
 
                 for _ in batch:
-                    config.message_queue.task_done()
+                    config.message_queue_raw.task_done()
 
                 batch.clear()
 
@@ -35,6 +35,6 @@ async def run():
                 await add_msgs(batch)
 
                 for _ in batch:
-                    config.message_queue.task_done()
+                    config.message_queue_raw.task_done()
 
                 batch.clear()

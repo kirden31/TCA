@@ -1,7 +1,6 @@
 __all__ = ['QdrantServer', 'get_qdrant_server']
 
 import logging
-from pathlib import Path
 import subprocess
 import time
 
@@ -18,14 +17,14 @@ class QdrantServer:
         self,
         url: str = DEFAULT_URL,
         docker_image: str = 'qdrant/qdrant',
-        volume_path: Path = config.QDRANT_VOLUME_PATH,
+        volume_path: str = config.QDRANT_VOLUME_PATH,
     ):
         self.url = url
         self.docker_image = docker_image
         self.volume_path = volume_path
         self._is_running = False
 
-    def is_running(self) -> bool:
+    def is_running(self):
         try:
             result = subprocess.run(
                 [
@@ -41,7 +40,8 @@ class QdrantServer:
                 check=False,
             )
             return result.stdout.strip() == 'true'
-        except Exception:
+        except Exception as e:
+            logger.error(f'Failed to execute docker: {e}')
             return False
 
     def _remove_container_if_exists(self):
@@ -69,7 +69,7 @@ class QdrantServer:
 
         return container_ids
 
-    def start(self, timeout: int = 30) -> bool:
+    def start(self, timeout: int = 30):
         logger.info('Starting Qdrant server (Docker)...')
 
         self._remove_container_if_exists()
@@ -107,7 +107,7 @@ class QdrantServer:
         logger.error(f'Qdrant failed to start within {timeout} sec.')
         return False
 
-    def stop(self, force: bool = True) -> bool:
+    def stop(self, force: bool = True):
         logger.info('Stopping Qdrant server...')
 
         timeout = '2' if force else '30'
@@ -123,12 +123,12 @@ class QdrantServer:
         logger.error(f'Stop error:\n{result.stderr.strip()}')
         return False
 
-    def restart(self, timeout: int = 30) -> bool:
+    def restart(self, timeout: int = 30):
         self.stop(force=False)
         time.sleep(2)
         return self.start(timeout=timeout)
 
-    def _get_container_ids(self) -> str:
+    def _get_container_ids(self):
         result = subprocess.run(
             ['sudo', 'docker', 'ps', '-a', '-q', '--filter', f'name={self.CONTAINER_NAME}'],
             capture_output=True,
@@ -138,7 +138,7 @@ class QdrantServer:
         return result.stdout.strip()
 
 
-def get_qdrant_server(url: str = config.QDRANT_URL, volume_path: Path = config.QDRANT_VOLUME_PATH):
+def get_qdrant_server(url: str = config.QDRANT_URL, volume_path: str = config.QDRANT_VOLUME_PATH):
     return QdrantServer(url=url, volume_path=volume_path)
 
 
