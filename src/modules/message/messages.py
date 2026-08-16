@@ -28,8 +28,8 @@ async def add_msgs(msgs):
                     'chat_id': str(msg.chat.id),
                     'message_id': msg.id,
                     'date': msg.date.isoformat(),
-                    'from_id': sender.id,
-                    'from_username': sender.username,
+                    'from_id': getattr(sender, 'id', None),
+                    'from_username': getattr(sender, 'username', None),
                 },
             )
             points.append(point)

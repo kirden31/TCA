@@ -32,4 +32,4 @@ async def handle_ai_query(message: aiogram.types.Message):
         await message.answer(answer)
 
     except Exception as e:
-        await message.answer(f'Произошла ошибка. Попробуйте позже.\n{e}')
+        await message.answer(f'Произошла ошибка. Попробуйте позже и/или сообщите админу.')
