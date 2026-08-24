@@ -28,7 +28,7 @@ async def catch_message(event):
         await modules.utils.put([msg], config.message_queue_raw)
 
     except Exception as e:
-        logger.error(f'Error processing message: {e}')
+        logger.exception(f'Error processing message: {e}')
 
 
 async def download_history(dt, chats=config.CHATS):
@@ -39,4 +39,4 @@ async def download_history(dt, chats=config.CHATS):
             *[history.save_history(chat_id, dt) for chat_id in unique_chats],
         )
     except Exception as e:
-        logger.error(f'Error downloading history: {e}')
+        logger.exception(f'Error downloading history: {e}')

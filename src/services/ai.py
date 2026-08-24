@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 async def process_question(question):
     try:
-        logger.info('Searching database...')
         answer = await search.search(question)
 
         if answer:
@@ -20,7 +19,7 @@ async def process_question(question):
         else:
             logger.warning('No answer found.')
     except Exception as e:
-        logger.error(f'Error processing question: {e}')
+        logger.exception(f'Error processing question: {e}')
 
 
 async def get_next_question():
@@ -37,7 +36,7 @@ async def get_next_question():
 
             await process_question(question)
         except Exception as e:
-            logger.error(f'Error processing question: {e}')
+            logger.exception(f'Error processing question: {e}')
             return None
 
 

@@ -19,7 +19,7 @@ async def _flush_batch(batch, retries=3):
             return True
 
         except Exception as e:
-            logger.error(f'Error upserting message to Qdrant: {e}')
+            logger.exception(f'Error upserting message to Qdrant: {e}')
 
             await asyncio.sleep(2**attempt)
 

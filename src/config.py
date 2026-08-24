@@ -88,7 +88,7 @@ bot = aiogram.Bot(
     ),
 )
 
-qdrant_client = AsyncQdrantClient(url=QDRANT_URL)
+qdrant_client = AsyncQdrantClient(url=QDRANT_URL, timeout=60, trust_env=False)
 
 embedder = None
 

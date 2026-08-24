@@ -59,7 +59,7 @@ async def llm_request(system_content: str, content: str) -> str:
     return resp.choices[0].message.content or ''
 
 
-async def search(question: str, limit: int = 50):
+async def search(question: str, limit: int = 70):
     try:
         normalize_question = await llm_question(question)
         vec = await utils.embed_text(normalize_question)
@@ -75,5 +75,5 @@ async def search(question: str, limit: int = 50):
 
         return answer
     except Exception as e:
-        logger.error(f'Error during search: {e}')
-        return None
+        logger.exception(f'AI module error: {e}')
+        return ''

@@ -5,7 +5,7 @@ import logging
 
 import config
 from modules.qdrant.qdrant_server import get_qdrant_server
-from qdrant_client import AsyncQdrantClient, models
+from qdrant_client import models
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +26,6 @@ async def run():
 
     if not success:
         return False
-
-    config.qdrant_client = AsyncQdrantClient(url=config.QDRANT_URL)
 
     try:
         await config.qdrant_client.get_collection(collection_name=config.COLLECTION)

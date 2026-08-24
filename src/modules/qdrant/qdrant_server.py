@@ -41,7 +41,7 @@ class QdrantServer:
             )
             return result.stdout.strip() == 'true'
         except Exception as e:
-            logger.error(f'Failed to execute docker: {e}')
+            logger.exception(f'Failed to execute docker: {e}')
             return False
 
     def _remove_container_if_exists(self):
@@ -72,6 +72,7 @@ class QdrantServer:
     def start(self, timeout: int = 30):
         logger.info('Starting Qdrant server (Docker)...')
 
+        # TODO: Убрать удаление контейнера
         self._remove_container_if_exists()
 
         time.sleep(1)

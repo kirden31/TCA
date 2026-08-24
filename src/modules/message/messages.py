@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 async def add_msgs(msgs):
-    texts = [msg.text for msg in msgs if msg.text]
-    if not texts:
+    text_msgs = [msg for msg in msgs if msg.text]
+    if not text_msgs:
         return
 
-    embeddings = await modules.utils.embed_texts(texts)
+    embeddings = await modules.utils.embed_texts([msg.text for msg in text_msgs])
     points = []
-    for i, msg in enumerate(msgs):
+    for i, msg in enumerate(text_msgs):
         if msg.text:
             sender = await msg.get_sender()
             point = PointStruct(
@@ -37,4 +37,4 @@ async def add_msgs(msgs):
     try:
         await modules.utils.put(points, config.message_queue)
     except Exception as e:
-        logger.error(f'Failed to add batch of messages to queue: {e}')
+        logger.exception(f'Failed to add batch of messages to queue: {e}')

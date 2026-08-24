@@ -1,5 +1,7 @@
 __all__ = ['cmd_start', 'handle_ai_query']
 
+import logging
+
 import aiogram.filters
 import aiogram.utils.chat_action
 import config
@@ -7,6 +9,8 @@ import modules.ai.search
 import modules.telegram.decorators as dec
 
 router = aiogram.Router()
+
+logger = logging.getLogger(__name__)
 
 
 @router.message(aiogram.filters.CommandStart())
@@ -32,4 +36,5 @@ async def handle_ai_query(message: aiogram.types.Message):
         await message.answer(answer)
 
     except Exception as e:
-        await message.answer(f'Произошла ошибка. Попробуйте позже и/или сообщите админу.')
+        logger.exception(f'Error sending response: {e}')
+        await message.answer('Произошла ошибка. Попробуйте позже и/или сообщите админу.')
